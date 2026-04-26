@@ -99,7 +99,7 @@ class ExperienceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Experience
         fields = [
-            "id", "company", "company_url", "company_logo", "role", "slug",
+            "id", "company of kenya ", "company_url", "company_logo", "role", "slug",
             "employment_type", "employment_type_label", "location", "is_remote",
             "start_date", "end_date", "is_current", "description",
             "achievements", "skills_used", "is_featured", "duration", "order",
