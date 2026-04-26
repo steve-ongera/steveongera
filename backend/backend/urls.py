@@ -1,22 +1,45 @@
-"""
-URL configuration for backend project.
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from core.views import (
+    ProfileView,
+    SkillCategoryViewSet,
+    SkillViewSet,
+    ProjectViewSet,
+    ExperienceViewSet,
+    EducationViewSet,
+    CertificationViewSet,
+    TestimonialViewSet,
+    BlogPostViewSet,
+    ServiceViewSet,
+    StatViewSet,
+    TagViewSet,
+    ContactMessageCreateView,
+    PortfolioSummaryView,
+)
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
-from django.contrib import admin
-from django.urls import path
+router = DefaultRouter()
+router.register(r"skill-categories", SkillCategoryViewSet, basename="skill-categories")
+router.register(r"skills", SkillViewSet, basename="skills")
+router.register(r"projects", ProjectViewSet, basename="projects")
+router.register(r"experiences", ExperienceViewSet, basename="experiences")
+router.register(r"education", EducationViewSet, basename="education")
+router.register(r"certifications", CertificationViewSet, basename="certifications")
+router.register(r"testimonials", TestimonialViewSet, basename="testimonials")
+router.register(r"blog", BlogPostViewSet, basename="blog")
+router.register(r"services", ServiceViewSet, basename="services")
+router.register(r"stats", StatViewSet, basename="stats")
+router.register(r"tags", TagViewSet, basename="tags")
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # Router-generated endpoints
+    path("", include(router.urls)),
+
+    # Single-call portfolio summary
+    path("portfolio/", PortfolioSummaryView.as_view(), name="portfolio-summary"),
+
+    # Profile (singleton)
+    path("profile/", ProfileView.as_view(), name="profile"),
+
+    # Contact form
+    path("contact/", ContactMessageCreateView.as_view(), name="contact"),
 ]
