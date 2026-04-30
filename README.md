@@ -1,185 +1,129 @@
-# Steve Ongera Portfolio — Full-Stack (Django + React)
+# Steve Ongera Portfolio — React Frontend
 
-A professional, SEO-optimised portfolio website for Steve Ongera, Backend Engineer based in Nairobi, Kenya.  
-Built to attract clients and employers **globally** and across **East Africa**.
+A React 18 + Vite frontend for the Django REST portfolio backend.
+Matches the original Bootstrap/Boxicons template exactly, with full API integration.
 
----
-
-## 🗂 Project Structure
+## Project Structure
 
 ```
-steve_portfolio/
-├── backend/                   # Django REST API
-│   ├── portfolio/             # Main app
-│   │   ├── models.py          # 11 models with slugs for SEO
-│   │   ├── serializers.py     # DRF serializers (list + detail)
-│   │   ├── views.py           # ViewSets + summary endpoint
-│   │   ├── urls.py            # App-level URL config
-│   │   └── admin.py           # Django admin
-│   ├── steve_portfolio/
-│   │   ├── settings.py        # Full settings with security, CORS, Redis, email
-│   │   └── urls.py            # Root URL config
-│   ├── requirements.txt
-│   └── .env.example
+portfolio-react/
+├── index.html                  # Entry HTML (SEO meta, vendor CSS/JS links)
+├── package.json
+├── vite.config.js              # Dev proxy → Django :8000
+├── .env.example                # Copy to .env.local
 │
-└── frontend/                  # React + Vite
-    ├── index.html             # Bootstrap Icons, Google Fonts, SEO meta
-    └── src/
-        ├── main.jsx           # Entry point
-        ├── App.jsx            # Router + global context + state
-        ├── index.css          # Design tokens (dark theme, accent green)
-        ├── utils/api.js       # All API helpers
-        ├── components/
-        │   ├── layout/
-        │   │   ├── Navbar.jsx + .css
-        │   │   └── Footer.jsx + .css
-        │   ├── sections/
-        │   │   ├── Hero.jsx + .css
-        │   │   ├── Skills.jsx + .css
-        │   │   ├── Projects.jsx + .css
-        │   │   ├── Experience.jsx + .css
-        │   │   ├── Testimonials.jsx + .css
-        │   │   └── Services.jsx + .css
-        │   └── ui/
-        │       ├── ScrollToTop.jsx
-        │       ├── LoadingScreen.jsx
-        │       └── Toast.jsx
-        └── pages/
-            ├── Home.jsx
-            ├── ProjectsPage.jsx + .css
-            ├── ProjectDetail.jsx + .css
-            ├── BlogPage.jsx + .css
-            ├── BlogDetail.jsx + .css
-            ├── ContactPage.jsx + .css
-            └── NotFound.jsx
+├── public/
+│   └── assets/                 # ← COPY your entire existing /assets/ folder here
+│       ├── css/style.css
+│       ├── img/
+│       ├── vendor/
+│       └── js/
+│
+└── src/
+    ├── main.jsx                # React root mount
+    ├── App.jsx                 # Route switcher
+    ├── styles/
+    │   └── main.css            # Append to style.css OR link after it
+    ├── utils/
+    │   └── api.js              # All Django REST API calls
+    └── pages/
+        └── IndexPage.jsx       # Full portfolio single page
 ```
 
----
+## Quick Start
 
-## 🚀 Quick Start
-
-### Backend (Django)
+### 1. Copy your static assets
 
 ```bash
-cd backend
-
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Configure environment
-cp .env.example .env
-# Edit .env with your PostgreSQL credentials and email settings
-
-# Create database
-createdb steve_portfolio_db  # or via pgAdmin
-
-# Run migrations
-python manage.py makemigrations
-python manage.py migrate
-
-# Create superuser
-python manage.py createsuperuser
-
-# Start dev server
-python manage.py runserver
-# API available at: http://localhost:8000/api/v1/
-# Admin at: http://localhost:8000/admin/
+cp -r /path/to/django/staticfiles/assets  public/assets
 ```
 
-### Frontend (React + Vite)
+The `index.html` expects them at `/assets/...`.
+
+### 2. Install dependencies
 
 ```bash
-cd frontend
-
-# Install dependencies
 npm install
-
-# Configure environment
-cp .env.example .env
-# Set VITE_API_BASE_URL=http://localhost:8000/api/v1
-
-# Start dev server
-npm run dev
-# Available at: http://localhost:5173
 ```
 
----
+### 3. Configure API base URL
 
-## 📡 API Endpoints
+```bash
+cp .env.example .env.local
+# Edit VITE_API_BASE if your Django server is on a different port/host
+```
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/v1/portfolio/` | **Full portfolio summary** (use this for home page) |
-| GET | `/api/v1/profile/` | Active profile |
-| GET | `/api/v1/projects/` | All projects (filterable) |
-| GET | `/api/v1/projects/{slug}/` | Project detail |
-| GET | `/api/v1/projects/featured/` | Featured projects |
-| GET | `/api/v1/skill-categories/` | Skills by category |
-| GET | `/api/v1/experiences/` | Work experience |
-| GET | `/api/v1/education/` | Education |
-| GET | `/api/v1/certifications/` | Certifications |
-| GET | `/api/v1/testimonials/` | Testimonials |
-| GET | `/api/v1/blog/` | Blog posts |
-| GET | `/api/v1/blog/{slug}/` | Blog post detail |
-| GET | `/api/v1/services/` | Services offered |
-| GET | `/api/v1/stats/` | Portfolio stats |
-| POST | `/api/v1/contact/` | Submit contact form |
+### 4. Start Django backend
 
-### Query Params (Projects)
-- `?search=django` — full-text search
-- `?project_type=freelance` — filter by type
-- `?status=completed` — filter by status
-- `?tags__slug=python` — filter by tag
-- `?is_featured=true` — featured only
+```bash
+cd your-django-project
+python manage.py runserver
+```
 
----
+### 5. Start React dev server
 
-## 🎨 Design System
+```bash
+npm run dev
+# Visit http://localhost:5173
+```
 
-| Token | Value |
-|-------|-------|
-| Background | `#080810` (near-black) |
-| Accent | `#00ff88` (electric green) |
-| Font Display | Syne (headings) |
-| Font Body | Instrument Sans |
-| Font Mono | DM Mono |
+Vite will proxy `/api/*` requests to `http://127.0.0.1:8000`.
 
----
+## Django Backend Requirements
 
-## 🌍 SEO Features
+Add the following to Django `settings.py`:
 
-- Slug-based URLs for all models (`/projects/my-project-slug/`)
-- `meta_title` + `meta_description` fields on projects and blog posts
-- Open Graph + Twitter Card meta in `index.html`
-- JSON-LD `Person` schema markup
-- Canonical URL support on blog posts
-- Sitemap-ready with `django.contrib.sitemaps`
+```python
+# Allow requests from Vite dev server
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
 
----
+# Install django-cors-headers if not already:
+# pip install django-cors-headers
+INSTALLED_APPS = [..., "corsheaders"]
+MIDDLEWARE = ["corsheaders.middleware.CorsMiddleware", ...]
 
-## 🔐 Production Checklist
+# API lives at /api/v1/
+# Your urls.py already includes router.urls under this prefix
+```
 
-- [ ] Set `DEBUG=False`
-- [ ] Change `DJANGO_SECRET_KEY`
-- [ ] Configure PostgreSQL credentials
-- [ ] Set `ALLOWED_HOSTS` to your domain
-- [ ] Configure Gmail SMTP or SendGrid
-- [ ] Set `CORS_ALLOWED_ORIGINS` to frontend domain
-- [ ] Run `python manage.py collectstatic`
-- [ ] Configure Redis for caching
-- [ ] Use `gunicorn` for WSGI server
-- [ ] Set up Nginx as reverse proxy
-- [ ] Enable HTTPS (Let's Encrypt)
+## Fix the serializers.py bug
 
----
+In `serializers.py` the `ExperienceSerializer` has a typo in the `fields` list:
+```python
+# WRONG:
+"company of kenya ",
+# CORRECT:
+"company",
+```
 
-## 🇰🇪 Built for East Africa, Deployed for the World
+## Styles / CSS
 
-- Timezone: **Africa/Nairobi (EAT, UTC+3)**
-- Currency defaults: **USD** (globally competitive pricing)
-- Remote-work signals built into profile model
-- Contact form captures budget ranges aligned with global freelance markets
+For the CSS, do one of:
+
+**Option A** — Append `src/styles/main.css` to the bottom of `public/assets/css/style.css`
+
+**Option B** — Add a second link in `index.html`:
+```html
+<link rel="stylesheet" href="/assets/css/style.css" />
+<link rel="stylesheet" href="/src/styles/main.css" />
+```
+
+## Production Build
+
+```bash
+npm run build
+# Outputs to /dist — serve with Nginx, or Django's WhiteNoise, etc.
+```
+
+## API Endpoints Used
+
+| Section        | Endpoint                     |
+|---------------|------------------------------|
+| Everything    | `GET /api/v1/portfolio/`     |
+| Contact form  | `POST /api/v1/contact/`      |
+
+All other endpoints (`/api/v1/projects/`, `/api/v1/blog/`, etc.) are available
+in `src/utils/api.js` for future pages.

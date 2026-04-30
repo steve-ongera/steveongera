@@ -1,0 +1,111 @@
+/*
+ * styles/main.css  ──  React-specific additions
+ * ─────────────────────────────────────────────
+ * INSTRUCTIONS:
+ *   1. Keep your existing  /assets/css/style.css  exactly as-is.
+ *      The index.html already links to it before this file.
+ *
+ *   2. Copy THIS file's contents and APPEND them to the bottom of
+ *      your existing style.css, OR link this file AFTER style.css
+ *      in your index.html:
+ *
+ *        <link rel="stylesheet" href="/assets/css/style.css" />
+ *        <link rel="stylesheet" href="/src/styles/main.css" />
+ *
+ *   3. The rules below only OVERRIDE or ADD — nothing here breaks
+ *      the original Bootstrap-based styles.
+ * ─────────────────────────────────────────────
+ */
+
+/* ── Skeleton / shimmer loader ─────────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.skeleton-box {
+  display: block;
+  background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 6px;
+}
+
+/* ── Portfolio grid item spacing fix for React (no Isotope) ────────────────── */
+.portfolio-container .portfolio-item {
+  margin-bottom: 30px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.portfolio-container .portfolio-item.hidden {
+  display: none;
+}
+
+/* ── Progress bars — ensure width drives the fill (React sets inline width) ── */
+.progress-bar {
+  transition: width 1s ease-in-out;
+}
+
+/* ── Contact form — React version uses div, not <form> ─────────────────────── */
+.php-email-form .form-group {
+  margin-bottom: 0;
+}
+
+/* ── Availability badge ────────────────────────────────────────────────────── */
+.badge.rounded-pill {
+  font-size: 0.78rem;
+  padding: 6px 14px;
+}
+
+/* ── Certifications card hover ─────────────────────────────────────────────── */
+#certifications .card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+#certifications .card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(5, 99, 187, 0.12) !important;
+}
+
+/* ── Mobile nav toggle active state fix ────────────────────────────────────── */
+.mobile-nav-toggle {
+  cursor: pointer;
+}
+
+/* ── Back-to-top button smooth show/hide ───────────────────────────────────── */
+.back-to-top {
+  transition: opacity 0.3s ease, visibility 0.3s ease !important;
+}
+
+/* ── Portfolio tech-stack badge ────────────────────────────────────────────── */
+.portfolio-info .badge {
+  font-size: 0.62rem;
+  padding: 3px 7px;
+}
+
+/* ── Testimonial star rating ───────────────────────────────────────────────── */
+.testimonial-item .bxs-star,
+.testimonial-item .bx-star {
+  color: #f4b400;
+  font-size: 14px;
+}
+
+/* ── Alert styles ─────────────────────────────────────────────────────────── */
+.alert {
+  border-radius: 8px;
+}
+
+/* ── Loading spinner in submit button ─────────────────────────────────────── */
+.btn .spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+  border-width: 0.15em;
+}
+
+/* ── Service card price styling ───────────────────────────────────────────── */
+.icon-box p[style] {
+  font-size: 0.9rem;
+}
+
+/* ── Resume item link icon ─────────────────────────────────────────────────── */
+.resume-item a .bi-box-arrow-up-right {
+  font-size: 0.75rem;
+  vertical-align: super;
+}
