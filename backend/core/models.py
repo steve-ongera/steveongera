@@ -120,15 +120,18 @@ class Skill(TimeStampedModel):
 # PROJECT
 # ─────────────────────────────────────────────
 class Tag(models.Model):
-    name = models.CharField(max_length=80)
-    slug = models.SlugField(unique=True, blank=True)
+    name  = models.CharField(max_length=80)
+    slug  = models.SlugField(unique=True, blank=True)
     color = models.CharField(max_length=7, default="#2563EB", help_text="Hex color code")
-
+ 
+    class Meta:               # ← ADD THIS BLOCK
+        ordering = ["name"]   # ← alphabetical order; silences pagination warning
+ 
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
-
+ 
     def __str__(self):
         return self.name
 

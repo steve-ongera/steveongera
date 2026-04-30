@@ -1,19 +1,15 @@
-
-
 """
 Django settings for steve_portfolio project.
-
 Steve Ongera — Full-Stack Engineer Portfolio
 """
 import os
 from pathlib import Path
 from datetime import timedelta
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # ─────────────────────────────────────────────
-# SECURITY — keep secret key in .env in production
+# SECURITY
 # ─────────────────────────────────────────────
 SECRET_KEY = os.environ.get(
     "DJANGO_SECRET_KEY",
@@ -31,7 +27,6 @@ ALLOWED_HOSTS = os.environ.get(
 # APPLICATIONS
 # ─────────────────────────────────────────────
 INSTALLED_APPS = [
-    # Django built-ins
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -39,21 +34,18 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sitemaps",
-
     # Third-party
     "rest_framework",
     "corsheaders",
     "django_filters",
-    "storages",           # django-storages for S3/GCS in production
-
-    # Portfolio app
+    # Local
     "core",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",   # serve static files in prod
-    "corsheaders.middleware.CorsMiddleware",         # must be before CommonMiddleware
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -83,12 +75,12 @@ TEMPLATES = [
 WSGI_APPLICATION = "backend.wsgi.application"
 
 # ─────────────────────────────────────────────
-# DATABASE
+# DATABASE  (SQLite for dev — swap for Postgres in prod)
 # ─────────────────────────────────────────────
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 
@@ -106,7 +98,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # INTERNATIONALISATION
 # ─────────────────────────────────────────────
 LANGUAGE_CODE = "en-us"
-TIME_ZONE = "Africa/Nairobi"      # EAT (UTC+3)
+TIME_ZONE = "Africa/Nairobi"
 USE_I18N = True
 USE_TZ = True
 
@@ -115,7 +107,11 @@ USE_TZ = True
 # ─────────────────────────────────────────────
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_DIRS = [BASE_DIR / "static"]
+
+# ── FIX: only include STATICFILES_DIRS if the folder actually exists ──────────
+_static_dir = BASE_DIR / "static"
+STATICFILES_DIRS = [_static_dir] if _static_dir.exists() else []
+
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_URL = "/media/"
@@ -156,7 +152,7 @@ REST_FRAMEWORK = {
 }
 
 # ─────────────────────────────────────────────
-# JWT SETTINGS
+# JWT
 # ─────────────────────────────────────────────
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
@@ -191,20 +187,20 @@ CORS_ALLOW_HEADERS = [
 # ─────────────────────────────────────────────
 EMAIL_BACKEND = os.environ.get(
     "EMAIL_BACKEND",
-    "django.core.mail.backends.console.EmailBackend",  # Console in dev; SMTP in prod
+    "django.core.mail.backends.console.EmailBackend",
 )
 EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp.gmail.com")
 EMAIL_PORT = int(os.environ.get("EMAIL_PORT", 587))
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
-DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "Steve Ongera <hello@steveongera.com>")
-
-# Custom setting for contact form notifications
+DEFAULT_FROM_EMAIL = os.environ.get(
+    "DEFAULT_FROM_EMAIL", "Steve Ongera <hello@steveongera.com>"
+)
 CONTACT_EMAIL = os.environ.get("CONTACT_EMAIL", "steveongera@gmail.com")
 
 # ─────────────────────────────────────────────
-# SECURITY HEADERS (production)
+# SECURITY HEADERS  (production only)
 # ─────────────────────────────────────────────
 if not DEBUG:
     SECURE_SSL_REDIRECT = True
@@ -218,15 +214,11 @@ if not DEBUG:
     X_FRAME_OPTIONS = "DENY"
 
 # ─────────────────────────────────────────────
-# CACHING (Redis in production)
+# CACHING
 # ─────────────────────────────────────────────
 CACHES = {
     "default": {
-        "BACKEND": "django.core.cache.backends.locmem.LocMemCache" if DEBUG else "django_redis.cache.RedisCache",
-        "LOCATION": os.environ.get("REDIS_URL", "redis://127.0.0.1:6379/1"),
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        } if not DEBUG else {},
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
     }
 }
 
@@ -238,7 +230,7 @@ LOGGING = {
     "disable_existing_loggers": False,
     "formatters": {
         "verbose": {
-            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
+            "format": "{levelname} {asctime} {module} {message}",
             "style": "{",
         },
     },
@@ -246,13 +238,6 @@ LOGGING = {
         "console": {
             "class": "logging.StreamHandler",
             "formatter": "verbose",
-        },
-        "file": {
-            "class": "logging.FileHandler",
-            "filename": BASE_DIR / "logs/debug.log",
-            "formatter": "verbose",
-        } if not DEBUG else {
-            "class": "logging.StreamHandler",
         },
     },
     "root": {
@@ -265,7 +250,7 @@ LOGGING = {
             "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
             "propagate": False,
         },
-        "portfolio": {
+        "core": {
             "handlers": ["console"],
             "level": "DEBUG",
             "propagate": False,
